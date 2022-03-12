@@ -4,6 +4,7 @@ var resultsEl = document.getElementById("result");
 var finalScoreEl = document.getElementById("finalScore");
 var gameoverDiv = document.getElementById("gameover");
 var questionsEl = document.getElementById("questions");
+var incorrectAnswer = document.getElementById("incorrect");
 var quizTimer = document.getElementById("timer");
 var startQuizButton = document.getElementById("startbtn");
 var startQuizDiv = document.getElementById("startpage");
@@ -80,12 +81,15 @@ var timerInterval;
 var score = 0;
 var correct;
 
+
 // This function cycles through the object array containing the quiz questions to generate the questions and answers.
 function generateQuizQuestion(){
     gameoverDiv.style.display = "none";
     if (currentQuestionIndex === finalQuestionIndex){
         return showScore();
     } 
+
+
     var currentQuestion = quizQuestions[currentQuestionIndex];
     questionsEl.innerHTML = "<p>" + currentQuestion.question + "</p>";
     buttonA.innerHTML = currentQuestion.choiceA;
@@ -101,17 +105,21 @@ function startQuiz(){
     generateQuizQuestion();
 
     //Timer
-    timerInterval = setInterval(function() {
+
+   var timerInterval = setInterval(function() {
         timeLeft--;
         quizTimer.textContent = "Time left: " + timeLeft;
     
         if(timeLeft === 0) {
           clearInterval(timerInterval);
+          
           showScore();
-        }
+        } 
+        
       }, 1000);
-    quizBody.style.display = "block";
+      quizBody.style.display = "block";
 }
+
 // This function is the end page screen that displays your score after either completeing the quiz or upon timer run out
 function showScore(){
     quizBody.style.display = "none"
@@ -204,14 +212,14 @@ function checkAnswer(answer){
         generateQuizQuestion();
         //display in the results div that the answer is correct.
     }else if (answer !== correct && currentQuestionIndex !== finalQuestionIndex){
-        alert("That Is Incorrect.")
+        alert("That Is Incorrect - 5 Seconds.")
         currentQuestionIndex++;
         generateQuizQuestion();
+        timeLeft = timeLeft - 5;
         //display in the results div that the answer is wrong.
-    }else{
-        showScore();
     }
 }
+
 
 // This button starts the quiz!
 startQuizButton.addEventListener("click",startQuiz);
